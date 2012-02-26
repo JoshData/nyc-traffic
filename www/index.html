@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title></title>
+  <title>NYC Traffic</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -18,6 +18,15 @@
   <!-- end CSS-->
 
   <script src="js/libs/modernizr-2.0.6.min.js"></script>
+  
+  <style>
+  body {
+  	  padding: 1em;
+  }
+  h1 {
+  	  font-size: 28pt;
+  }
+  </style>
 </head>
 
 <body>
@@ -25,9 +34,14 @@
   <div id="container">
     <header>
 
+    	<h1><span style="font-family: Arial Black;">NYC</span> Traffic Patterns</h1>
+    	<p>An analysis of the traffic patterns on New York City&rsquo;s arterial roads based on <a href="http://a841-dotweb01.nyc.gov/datafeeds/">NYC DOT&rsquo;s Traffic Speed Detectors</a> from January 7-15, 2012.</p>
     </header>
     <div id="main" role="main">
-
+    
+    	<div id="container_a" style="width: 800px; height: 300px"> </div>
+    	<div id="container_b" style="width: 800px; height: 300px"> </div>
+    	<div id="container_c" style="width: 800px; height: 300px"> </div>
     </div>
     <footer>
 
@@ -52,11 +66,86 @@
     });
   </script>
 
+  <script src="js/highcharts.js"> </script>
+  <script src="data.js"> </script>
 
-  <!--[if lt IE 7 ]>
-    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-    <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
-  <![endif]-->
-  
+  <script>
+$(document).ready(function() {
+      /*0 81
+		1 92
+		2 19
+		3 23
+		4 62
+		5 190
+		*/
+    
+	make_chart('a', ts_pattern_0, ts_pattern_1);
+	make_chart('b', ts_pattern_2, ts_pattern_3);
+	make_chart('c', ts_pattern_4, ts_pattern_5);
+});
+
+
+
+function make_chart(container, series1, series2) {
+   var chart = new Highcharts.Chart({
+      chart: {
+         renderTo: 'container_' + container,
+         zoomType: 'x',
+         spacingRight: 20
+      },
+       title: {
+         text: 'Traffic Speeds in One Week'
+      },
+      xAxis: {
+         //type: 'datetime',
+         //maxZoom: 14 * 24 * 3600000, // fourteen days
+         title: { text: null },
+         categories: ts_x,
+         tickInterval: 120
+      },
+      yAxis: {
+         title: { text: 'Average Speed' },
+         startOnTick: false,
+         showFirstLabel: false
+      },
+      tooltip: {
+         shared: true               
+      },
+      legend: {
+         enabled: false
+      },
+      plotOptions: {
+         line: {
+            lineWidth: 1,
+            marker: {
+               enabled: true,
+               radius: 0,
+               states: {
+                  hover: {
+                     enabled: true,
+                     radius: 5
+                  }
+               }
+            },
+            shadow: false,
+            states: {
+               hover: {
+                  lineWidth: 1                  
+               }
+            }
+         }
+      },
+      
+      series: [{
+         type: 'line',
+         data: series1
+      }, {
+         type: 'line',
+         data: series2
+      }]
+   });
+      
+}  	
+  </script>
 </body>
 </html>
